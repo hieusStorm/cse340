@@ -1,0 +1,27 @@
+@media screen and (min-width: 500px) {
+  /* id */
+  #wrapper {
+    background-color: #fff;
+    margin: 0 auto;
+    width: 70%;
+    border: 5px solid #058605;
+    border-radius: 1%;
+  }
+  /* class */
+  .overlay {
+    position: absolute;
+    background-color: #272626bf;
+    color: #fff;
+    top: 15rem;
+    left: 20rem;
+    text-align: center;
+    display: grid;
+  }
+  .overlay * {
+    margin: 1rem;
+  }
+  /* tags */
+  body {
+    background-image: url("/images/site/checkerboard.jpg");
+  }
+}
