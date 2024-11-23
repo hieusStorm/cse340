@@ -6,21 +6,18 @@ const Util = {}
  ************************** */
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications()
-  let list = "<ul>"
-  list += '<li><a href="/" title="Home page">Home</a></li>'
+  let list = ""
+  list += '<a href="/" title="Home page" class="button">Home</a>'
   data.rows.forEach((row) => {
-    list += "<li>"
     list +=
       '<a href="/inv/type/' +
       row.classification_id +
       '" title="See our inventory of ' +
       row.classification_name +
-      ' vehicles">' +
+      ' vehicles" class="button">' +
       row.classification_name +
       "</a>"
-    list += "</li>"
   })
-  list += "</ul>"
   return list
 }
 
@@ -29,7 +26,7 @@ Util.getNav = async function (req, res, next) {
 * Build the classification view HTML
 * ************************************ */
 Util.buildClassificationGrid = async function(data){
-  let grid
+  let grid = ""
   if(data.length > 0){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
@@ -56,6 +53,30 @@ Util.buildClassificationGrid = async function(data){
     grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
+}
+// build car view HTML
+Util.buildInventoryFlex = async function(data) {
+  let flex ="";
+  if (data.length > 0){
+    flex += `<h2>${data[0].inv_year} ${data[0].inv_make} ${data[0].inv_model}</h2>`
+    flex += `<div class='inv-flex'>`
+    flex += `<img src='${data[0].inv_image}' alt='image of a ${data[0].inv_make} ${data[0].inv_model}'>`
+    flex += `<p><strong>Price</strong>:  $${new Intl.NumberFormat('en-US').format(data[0].inv_price)}</p>`
+    flex += `<div>`
+    flex += `<h4>Details</h4>`
+    flex += `<p><strong>Make</strong>:${data[0].inv_make}</p>`
+    flex += `<p><strong>Model</strong>:${data[0].inv_model}</p>`
+    flex += `<p><strong>Year</strong>:${data[0].inv_year}</p>`
+    flex += `<p><strong>Price</strong>:${ new Intl.NumberFormat('en-US').format(data[0].inv_price)}</p>`
+    flex += `<p><strong>Color</strong>:${data[0].inv_color}</p>`
+    flex += `<p><strong>Mileage</strong>:${ new Intl.NumberFormat('en-US').format(data[0].inv_miles)}</p>`
+    flex += `<p><strong>Decription</strong>:${data[0].inv_description}</p>`
+    flex += `</div>`
+    flex += `</div>`
+  } else {
+    flex += `<p class="notice">Sorry, no matching vehicle could be found.</p>`;
+  }
+  return flex;
 }
 
 /* ****************************************

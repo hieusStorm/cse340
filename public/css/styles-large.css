@@ -20,6 +20,13 @@
   .overlay * {
     margin: 1rem;
   }
+  .inv-flex {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .inv-flex * {
+    margin: 1rem;
+  }
   /* tags */
   body {
     background-image: url("/images/site/checkerboard.jpg");
