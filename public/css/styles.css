@@ -41,6 +41,7 @@
   transition: 0.5s;
   border-radius: 1rem;
   background-color: #203020;
+  border: none;
 }
 .button:hover {
   background-color: #5e2323;
@@ -76,4 +77,24 @@ figure div {
   background-color: #058605;
   padding: 1rem;
   border: 1px solid #000;
+}
+
+form {
+  background-color: #058605;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  margin: 0 auto;
+}
+
+form input {
+  margin-bottom: 1rem;
+}
+
+form a {
+  color: #fff;
 }
