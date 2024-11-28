@@ -56,9 +56,9 @@ app.use(static)
 //index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
-app.use("/inv", inventoryRoute)
+app.use("/inv", utilities.handleErrors(inventoryRoute))
 // account routes
-app.use("/account", accountRoute)
+app.use("/account", utilities.handleErrors(accountRoute))
 // forced error route
 app.get("/forcedError/", utilities.handleErrors(baseController.forceError))
 
