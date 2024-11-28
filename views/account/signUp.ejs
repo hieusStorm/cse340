@@ -9,11 +9,11 @@
 <% } %>
 <form action="/account/signUp" method="post">
     <label for="account_firstname">First Name:</label>
-    <input type="text" id="account_firstname" name="account_firstname" placeholder="John" required>
+    <input type="text" id="account_firstname" name="account_firstname" placeholder="John" required value="<%= locals.account_firstname %>">
     <label for="account_lastname">Last Name:</label>
-    <input type="text" id="account_lastname" name="account_lastname" placeholder="Smith" required>
+    <input type="text" id="account_lastname" name="account_lastname" placeholder="Smith" required value="<%= locals.account_lastname %>">
     <label for="account_email">Email:</label>
-    <input type="email" id="account_email" name="account_email" placeholder="example@gmail.com" required>
+    <input type="email" id="account_email" name="account_email" placeholder="example@gmail.com" required value="<%= locals.account_email %>">
     <label for="account_password">Password:</label>
     <span>Passwords must be at least 12 characters and contain at least 1 number, 1 capital letter and 1 special character</span>
     <input type="password" id="account_password" name="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" title="The password requires at at least 12 characters and has at least 1 uppercase character, 1 number and 1 special character">
