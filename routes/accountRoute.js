@@ -13,7 +13,7 @@ router.post(
     "/signUp/",
     regValidate.registationRules(),
     regValidate.checkRegData,
-    utilities.handleErrors(accountController.registerAccount)
+    utilities.handleErrors(accountController.signUpAccount)
   )
 
 // Process the login attempt

@@ -7,6 +7,11 @@ async function getClassifications(){
   return await pool.query("SELECT * FROM public.classification ORDER BY classification_name")
 }
 
+// get all inventory items
+async function getInventory() {
+  return await pool.query("SELECT * FROM public.inventory")
+}
+
 /* ***************************
  *  Get all inventory items and classification_name by classification_id
  * ************************** */
@@ -35,4 +40,15 @@ async function getInventoryByInventoryId(inventoryId) {
   }
 }
 
-module.exports = {getClassifications, getInventoryByClassificationId, getInventoryByInventoryId}
+// check if a classification exists
+async function checkClassification(classification_name) {
+  try {
+    const sql = "SELECT * FROM public.classification WHERE classification_name = $1"
+    const classifiaction = await pool(sql, [classification_name])
+    return classifiaction.rowCount
+  } catch (error) {
+    return error.message
+  }
+}
+
+module.exports = {getClassifications, getInventory, getInventoryByClassificationId, getInventoryByInventoryId, checkClassification}

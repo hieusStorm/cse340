@@ -27,12 +27,38 @@ invCont.buildByInventoryId = async function (req, res, next) {
   const flex = await utilities.buildInventoryFlex(data)
   let nav = await utilities.getNav()
   const carName = `${data[0].inv_make} ${data[0].inv_model}`
-  console.log(flex)
   res.render("./inventory/detail", {
     title: carName,
     nav,
     flex,
     errors: null,
+  })
+}
+
+// build management view
+invCont.buildManagement = async function (req, res, next) {
+  const classifications = await invModel.getClassifications()
+  const inventoryItems = await invModel.getInventory()
+  let nav = await utilities.getNav()
+  let classificationList = "<ul>"
+  let inventoryList = "<ul>"
+
+  classifications.rows.forEach(classification => {
+    classificationList += `<li>${classification.classification_name}</li>`
+  })
+  classificationList += "</ul>"
+
+  inventoryItems.rows.forEach(inventoryItem => {
+    inventoryList += `<li>${inventoryItem.inv_make} ${inventoryItem.inv_model}</li>`
+  })
+  inventoryList += "</ul>"
+
+  res.render("./inventory/management", {
+    title: "Management",
+    nav,
+    classification: classificationList,
+    inventory: inventoryList,
+    errors: null
   })
 }
 

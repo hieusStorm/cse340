@@ -57,10 +57,12 @@ app.use(static)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
 app.use("/inv", utilities.handleErrors(inventoryRoute))
+//management routes
+app.use("/site-name", utilities.handleErrors(inventoryRoute))
 // account routes
 app.use("/account", utilities.handleErrors(accountRoute))
 // forced error route
-app.get("/forcedError/", utilities.handleErrors(baseController.forceError))
+app.get("/forcedError", utilities.handleErrors(baseController.forceError))
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
