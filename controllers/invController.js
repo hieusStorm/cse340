@@ -1,5 +1,6 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
+const { classification } = require("../utilities/inventory-validation")
 
 const invCont = {}
 
@@ -60,6 +61,55 @@ invCont.buildManagement = async function (req, res, next) {
     inventory: inventoryList,
     errors: null
   })
+}
+
+invCont.buildAddClassifaction = async (req, res, next) => {
+  let nav = await utilities.getNav()
+  res.render("inventory/add-classification", {
+    title: "Add Classification",
+    nav,
+    errors: null
+  })
+}
+
+// add classifcation to table
+invCont.addClassification = async (req, res) => {
+  const { classification_name } = req.body
+  const reqResult = await invModel.addClassification(classification_name)
+  let nav = await utilities.getNav()
+
+  if (reqResult) {
+    const classifications = await invModel.getClassifications()
+    const inventoryItems = await invModel.getInventory()
+    let classificationList = "<ul>"
+    let inventoryList = "<ul>"
+    classifications.rows.forEach(classification => {
+      classificationList += `<li>${classification.classification_name}</li>`
+    })
+    classificationList += "</ul>"
+    
+    inventoryItems.rows.forEach(inventoryItem => {
+      inventoryList += `<li>${inventoryItem.inv_make} ${inventoryItem.inv_model}</li>`
+    })
+    inventoryList += "</ul>"
+
+    req.flash(
+      "notice",
+      `Congratulations, you\'ve added ${classification_name} as a classification.`
+    )
+    res.status(201).render("inventory/management", {
+      title: "Management",
+      nav,
+      classification: classificationList,
+      inventory: inventoryList,
+    })
+  } else {
+    req.flash("notice", "Sorry, failed adding the classification.")
+    res.status(501).render("inventory/add-classification", {
+      title: "Registration",
+      nav,
+    })
+  }
 }
 
 module.exports = invCont
