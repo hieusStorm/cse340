@@ -91,7 +91,7 @@ form {
   margin: 0 auto;
 }
 
-form input {
+form input, form select, form textarea {
   margin-bottom: 1rem;
 }
 

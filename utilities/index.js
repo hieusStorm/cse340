@@ -61,22 +61,42 @@ Util.buildInventoryFlex = async function(data) {
     flex += `<h2>${data[0].inv_year} ${data[0].inv_make} ${data[0].inv_model}</h2>`
     flex += `<div class='inv-flex'>`
     flex += `<img src='${data[0].inv_image}' alt='image of a ${data[0].inv_make} ${data[0].inv_model}'>`
-    flex += `<p><strong>Price</strong>:  $${new Intl.NumberFormat('en-US').format(data[0].inv_price)}</p>`
+    flex += `<p><strong>Price</strong> $${new Intl.NumberFormat('en-US').format(data[0].inv_price)}</p>`
     flex += `<div>`
     flex += `<h4>Details</h4>`
-    flex += `<p><strong>Make</strong>:${data[0].inv_make}</p>`
-    flex += `<p><strong>Model</strong>:${data[0].inv_model}</p>`
-    flex += `<p><strong>Year</strong>:${data[0].inv_year}</p>`
-    flex += `<p><strong>Price</strong>:${ new Intl.NumberFormat('en-US').format(data[0].inv_price)}</p>`
-    flex += `<p><strong>Color</strong>:${data[0].inv_color}</p>`
-    flex += `<p><strong>Mileage</strong>:${ new Intl.NumberFormat('en-US').format(data[0].inv_miles)}</p>`
-    flex += `<p><strong>Decription</strong>:${data[0].inv_description}</p>`
+    flex += `<p><strong>Make</strong> ${data[0].inv_make}</p>`
+    flex += `<p><strong>Model</strong> ${data[0].inv_model}</p>`
+    flex += `<p><strong>Year</strong> ${data[0].inv_year}</p>`
+    flex += `<p><strong>Price</strong> ${ new Intl.NumberFormat('en-US').format(data[0].inv_price)}</p>`
+    flex += `<p><strong>Color</strong> ${data[0].inv_color}</p>`
+    flex += `<p><strong>Mileage</strong> ${ new Intl.NumberFormat('en-US').format(data[0].inv_miles)}</p>`
+    flex += `<p><strong>Decription</strong> ${data[0].inv_description}</p>`
     flex += `</div>`
     flex += `</div>`
   } else {
     flex += `<p class="notice">Sorry, no matching vehicle could be found.</p>`;
   }
   return flex;
+}
+
+
+Util.buildClassificationList = async function (classification_id = null) {
+  let data = await invModel.getClassifications()
+  let classificationList =
+    '<select name="classification_id" id="classificationList" required>'
+  classificationList += "<option value=''>Choose a Classification</option>"
+  data.rows.forEach((row) => {
+    classificationList += '<option value="' + row.classification_id + '"'
+    if (
+      classification_id != null &&
+      row.classification_id == classification_id
+    ) {
+      classificationList += " selected "
+    }
+    classificationList += ">" + row.classification_name + "</option>"
+  })
+  classificationList += "</select>"
+  return classificationList
 }
 
 /* ****************************************

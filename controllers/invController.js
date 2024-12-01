@@ -63,6 +63,7 @@ invCont.buildManagement = async function (req, res, next) {
   })
 }
 
+// BUild add classification page
 invCont.buildAddClassifaction = async (req, res, next) => {
   let nav = await utilities.getNav()
   res.render("inventory/add-classification", {
@@ -108,6 +109,60 @@ invCont.addClassification = async (req, res) => {
     res.status(501).render("inventory/add-classification", {
       title: "Registration",
       nav,
+    })
+  }
+}
+
+// build add inventory page
+invCont.buildAddInventory = async (req, res, next) => {
+  let nav = await utilities.getNav()
+  let classifications = await utilities.buildClassificationList()
+  res.render("inventory/add-inventory", {
+    title: "Add Inventory",
+    nav,
+    classifications,
+    errors: null
+  })
+}
+
+// add inventory
+invCont.addInventory = async (req, res) => {
+  const { inv_make, inv_model, inv_year, inv_description, inv_price, inv_miles, inv_color, classification_id } = req.body
+  const reqResult = await invModel.addInventory(inv_make, inv_model, inv_year, inv_description, inv_price, inv_miles, inv_color, classification_id)
+  let nav = await utilities.getNav()
+
+  if (reqResult) {
+    const classifications = await invModel.getClassifications()
+    const inventoryItems = await invModel.getInventory()
+    let classificationList = "<ul>"
+    let inventoryList = "<ul>"
+    classifications.rows.forEach(classification => {
+      classificationList += `<li>${classification.classification_name}</li>`
+    })
+    classificationList += "</ul>"
+    
+    inventoryItems.rows.forEach(inventoryItem => {
+      inventoryList += `<li>${inventoryItem.inv_make} ${inventoryItem.inv_model}</li>`
+    })
+    inventoryList += "</ul>"
+
+    req.flash(
+      "notice",
+      `Congratulations, you\'ve added ${inv_make} ${inv_model}.`
+    )
+    res.status(201).render("inventory/management", {
+      title: "Management",
+      nav,
+      classification: classificationList,
+      inventory: inventoryList,
+    })
+  } else {
+    const classifications = await utilities.buildClassificationList()
+    req.flash("notice", "Sorry, failed adding Inventory.")
+    res.status(501).render("inventory/add-inventory", {
+      title: "Add Inventory",
+      nav,
+      classifications
     })
   }
 }
