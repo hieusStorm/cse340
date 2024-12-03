@@ -38,6 +38,7 @@ validate.checkRegDataClassification = async (req, res, next) => {
     next()
 }
 
+//check inventory data
 validate.inventory = () => {
     return [
         body("inv_make")
@@ -119,6 +120,34 @@ validate.checkRegDataInventory = async (req, res, next) => {
             inv_price,
             inv_miles,
             inv_color,
+        })
+        return
+    }
+    next()
+}
+
+//check inventory data
+validate.checkUpdateData = async (req, res, next) => {
+    const { inv_make, inv_model, inv_year, inv_description, inv_price, inv_miles, inv_color, classification_id, inv_id } = req.body
+    let errors = []
+    errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav()
+        let classifications = await utilities.buildClassificationList(classification_id)
+        let itemName = `${inv_make} ${inv_model}`
+        res.render("inventory/edit-inventory", {
+            errors, 
+            title: "Edit " + itemName,
+            nav,
+            classifications,
+            inv_make,
+            inv_model,
+            inv_year,
+            inv_description,
+            inv_price,
+            inv_miles,
+            inv_color,
+            inv_id
         })
         return
     }

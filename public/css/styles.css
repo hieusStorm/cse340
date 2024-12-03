@@ -68,6 +68,10 @@ nav {
   width: 100%;
 }
 
+main {
+  text-align: center;
+}
+
 figure {
   display: grid;
   justify-content: center;
@@ -96,5 +100,23 @@ form input, form select, form textarea {
 }
 
 form a {
+  color: #fff;
+}
+
+table {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+td {
+  padding: 1rem;
+}
+
+tr:nth-child(even) {
+  background-color: #203020;
+  color: #fff;
+}
+
+tr:nth-child(even) a {
   color: #fff;
 }

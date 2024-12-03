@@ -38,27 +38,13 @@ invCont.buildByInventoryId = async function (req, res, next) {
 
 // build management view
 invCont.buildManagement = async function (req, res, next) {
-  const classifications = await invModel.getClassifications()
-  const inventoryItems = await invModel.getInventory()
   let nav = await utilities.getNav()
-  let classificationList = "<ul>"
-  let inventoryList = "<ul>"
-
-  classifications.rows.forEach(classification => {
-    classificationList += `<li>${classification.classification_name}</li>`
-  })
-  classificationList += "</ul>"
-
-  inventoryItems.rows.forEach(inventoryItem => {
-    inventoryList += `<li>${inventoryItem.inv_make} ${inventoryItem.inv_model}</li>`
-  })
-  inventoryList += "</ul>"
+  const classificationSelect = await utilities.buildClassificationList()
 
   res.render("./inventory/management", {
     title: "Management",
     nav,
-    classification: classificationList,
-    inventory: inventoryList,
+    classificationSelect,
     errors: null
   })
 }
@@ -80,19 +66,7 @@ invCont.addClassification = async (req, res) => {
   let nav = await utilities.getNav()
 
   if (reqResult) {
-    const classifications = await invModel.getClassifications()
-    const inventoryItems = await invModel.getInventory()
-    let classificationList = "<ul>"
-    let inventoryList = "<ul>"
-    classifications.rows.forEach(classification => {
-      classificationList += `<li>${classification.classification_name}</li>`
-    })
-    classificationList += "</ul>"
-    
-    inventoryItems.rows.forEach(inventoryItem => {
-      inventoryList += `<li>${inventoryItem.inv_make} ${inventoryItem.inv_model}</li>`
-    })
-    inventoryList += "</ul>"
+    const classificationSelect = await utilities.buildClassificationList()
 
     req.flash(
       "notice",
@@ -101,8 +75,7 @@ invCont.addClassification = async (req, res) => {
     res.status(201).render("inventory/management", {
       title: "Management",
       nav,
-      classification: classificationList,
-      inventory: inventoryList,
+      classificationSelect,
     })
   } else {
     req.flash("notice", "Sorry, failed adding the classification.")
@@ -132,20 +105,7 @@ invCont.addInventory = async (req, res) => {
   let nav = await utilities.getNav()
 
   if (reqResult) {
-    const classifications = await invModel.getClassifications()
-    const inventoryItems = await invModel.getInventory()
-    let classificationList = "<ul>"
-    let inventoryList = "<ul>"
-    classifications.rows.forEach(classification => {
-      classificationList += `<li>${classification.classification_name}</li>`
-    })
-    classificationList += "</ul>"
-    
-    inventoryItems.rows.forEach(inventoryItem => {
-      inventoryList += `<li>${inventoryItem.inv_make} ${inventoryItem.inv_model}</li>`
-    })
-    inventoryList += "</ul>"
-
+    const classificationSelect = await utilities.buildClassificationList()
     req.flash(
       "notice",
       `Congratulations, you\'ve added ${inv_make} ${inv_model}.`
@@ -153,8 +113,7 @@ invCont.addInventory = async (req, res) => {
     res.status(201).render("inventory/management", {
       title: "Management",
       nav,
-      classification: classificationList,
-      inventory: inventoryList,
+      classificationSelect,
     })
   } else {
     const classifications = await utilities.buildClassificationList()
@@ -162,7 +121,103 @@ invCont.addInventory = async (req, res) => {
     res.status(501).render("inventory/add-inventory", {
       title: "Add Inventory",
       nav,
-      classifications
+    })
+  }
+}
+
+/* ***************************
+ *  Return Inventory by Classification As JSON
+ * ************************** */
+invCont.getInventoryJSON = async (req, res, next) => {
+  const classification_id = parseInt(req.params.classification_id)
+  const invData = await invModel.getInventoryByClassificationId(classification_id)
+  if (invData[0].inv_id) {
+    return res.json(invData)
+  } else {
+    next(new Error("No data returned"))
+  }
+}
+
+// build edit inventory page
+invCont.buildEditInventory = async (req, res, next) => {
+  let inv_id = parseInt(req.params.inv_id)
+  let nav = await utilities.getNav()
+  let inventoryData = await invModel.getInventoryByInventoryId(inv_id)
+  let classifications = await utilities.buildClassificationList(inventoryData[0].classification_id)
+  let itemName = `${inventoryData[0].inv_make} ${inventoryData[0].inv_model}`
+  res.render("inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classifications,
+    errors: null,
+    inv_id: inventoryData[0].inv_id,
+    inv_make: inventoryData[0].inv_make,
+    inv_model: inventoryData[0].inv_model,
+    inv_year: inventoryData[0].inv_year,
+    inv_description: inventoryData[0].inv_description,
+    inv_image: inventoryData[0].inv_image,
+    inv_thumbnail: inventoryData[0].inv_thumbnail,
+    inv_price: inventoryData[0].inv_price,
+    inv_miles: inventoryData[0].inv_miles,
+    inv_color: inventoryData[0].inv_color,
+    classification_id: inventoryData[0].classification_id
+  })
+}
+
+// Edit inventory
+invCont.updateInventory = async (req, res, next) => {
+  let nav = await utilities.getNav()
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body
+  const updateResult = await invModel.updateInventory(
+    inv_id,  
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id
+  )
+
+  if (updateResult) {
+    const itemName = updateResult.inv_make + " " + updateResult.inv_model
+    req.flash("notice", `The ${itemName} was successfully updated.`)
+    res.redirect("../site-name/inv/")
+  } else {
+    const classificationSelect = await utilities.buildClassificationList(classification_id)
+    const itemName = `${inv_make} ${inv_model}`
+    req.flash("notice", "Sorry, the insert failed.")
+    res.status(501).render("inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classifications: classificationSelect,
+    errors: null,
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id
     })
   }
 }

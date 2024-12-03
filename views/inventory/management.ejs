@@ -1,12 +1,15 @@
 <h1><%- title %></h1>
 <%- messages() %>
 <section>
-    <h2>Classifications</h2>
-    <%- classification %>
+    <h2>Add Inventory</h2>
     <a class="button" href="/site-name/inv/add-classification">Add Classification</a>
-</section>
-<section>
-    <h2>Inventory</h2>
-    <%- inventory %>
     <a class="button" href="/site-name/inv/add-inventory">Add Inventory</a>
 </section>
+<section>
+    <h2>Manage Inventory</h2>
+    <p>Select a classification to view the related inventory</p>
+    <%- classificationSelect %>
+    <table id="inventoryDisplay"></table>
+    <noscript>JavaScript must be enabled to use this page.</noscript>
+</section>
+<script src="../../js/inventory.js"></script>
