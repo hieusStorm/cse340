@@ -222,4 +222,52 @@ invCont.updateInventory = async (req, res, next) => {
   }
 }
 
+// build delete inventory page
+invCont.buildDelete = async (req, res, next) => {
+  let inv_id = parseInt(req.params.inv_id)
+  let nav = await utilities.getNav()
+  let inventoryData = await invModel.getInventoryByInventoryId(inv_id)
+  let itemName = `${inventoryData[0].inv_make} ${inventoryData[0].inv_model}`
+  res.render("inventory/delete-confirm", {
+    title: "Delete " + itemName,
+    nav,
+    errors: null,
+    inv_id: inventoryData[0].inv_id,
+    inv_make: inventoryData[0].inv_make,
+    inv_model: inventoryData[0].inv_model,
+    inv_year: inventoryData[0].inv_year,
+  })
+}
+
+// Delete inventory
+invCont.deleteItem = async (req, res, next) => {
+  let nav = await utilities.getNav()
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_price,
+    inv_year,
+  } = req.body
+  const deleteResult = await invModel.deleteInventory(inv_id)
+
+  if (deleteResult) {
+    req.flash("notice", `The ${inv_make} ${inv_model} was successfully deleted.`)
+    res.redirect("../inv/")
+  } else {
+    const itemName = `${inv_make} ${inv_model}`
+    req.flash("notice", "Sorry, the insert failed.")
+    res.status(501).render("inventory/delete-confirm", {
+    title: "Delete " + itemName,
+    nav,
+    errors: null,
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_price,
+    })
+  }
+}
+
 module.exports = invCont
