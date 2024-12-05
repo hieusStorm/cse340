@@ -63,8 +63,6 @@ app.use(static)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
 app.use("/inv", utilities.handleErrors(inventoryRoute))
-//management routes
-app.use("/site-name", utilities.handleErrors(inventoryRoute))
 // account routes
 app.use("/account", utilities.handleErrors(accountRoute))
 // forced error route

@@ -12,23 +12,23 @@ router.get("/type/:classificationId", utilities.handleErrors(invController.build
 router.get("/detail/:inventoryId", utilities.handleErrors(invController.buildByInventoryId))
 
 //Route to build management page
-router.get("/inv/", utilities.handleErrors(invController.buildManagement))
+router.get("/", utilities.handleErrors(invController.buildManagement))
 
 // route to build new classifiaction page
-router.get("/inv/add-classification", utilities.handleErrors(invController.buildAddClassifaction))
+router.get("/add-classification", utilities.handleErrors(invController.buildAddClassifaction))
 
 // add new classification
-router.post("/inv/add-classification", 
+router.post("/add-classification", 
     invValidation.classification(), 
     invValidation.checkRegDataClassification, 
     utilities.handleErrors(invController.addClassification)
 )
 
 // route build add inventory
-router.get("/inv/add-inventory", utilities.handleErrors(invController.buildAddInventory))
+router.get("/add-inventory", utilities.handleErrors(invController.buildAddInventory))
 
 // add new inventory
-router.post("/inv/add-inventory",
+router.post("/add-inventory",
     invValidation.inventory(), 
     invValidation.checkRegDataInventory, 
     utilities.handleErrors(invController.addInventory)
