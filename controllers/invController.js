@@ -1,5 +1,6 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
+const jwt = require("jsonwebtoken")
 const { classification } = require("../utilities/inventory-validation")
 
 const invCont = {}
@@ -40,12 +41,12 @@ invCont.buildByInventoryId = async function (req, res, next) {
 invCont.buildManagement = async function (req, res, next) {
   let nav = await utilities.getNav()
   const classificationSelect = await utilities.buildClassificationList()
-
   res.render("./inventory/management", {
     title: "Management",
     nav,
     classificationSelect,
     errors: null
+
   })
 }
 

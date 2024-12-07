@@ -136,6 +136,18 @@ Util.checkJWTToken = (req, res, next) => {
   }
  }
 
+//  check account type
+Util.checkAccountType = (req, res, next) => {
+  const token = req.cookies.jwt
+  const jwtInfo = jwt.decode(token)
+  if (jwtInfo.account_type == "Admin" || jwtInfo.account_type == "Employee"){
+    next()
+  } else {
+    req.flash("notice", "You are not an employee or admin please login with as an employee or admin to continue")
+    return res.redirect("/account/login")
+  }
+}  
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 

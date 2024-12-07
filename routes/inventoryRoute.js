@@ -12,10 +12,10 @@ router.get("/type/:classificationId", utilities.handleErrors(invController.build
 router.get("/detail/:inventoryId", utilities.handleErrors(invController.buildByInventoryId))
 
 //Route to build management page
-router.get("/", utilities.handleErrors(invController.buildManagement))
+router.get("/", utilities.checkAccountType, utilities.handleErrors(invController.buildManagement))
 
 // route to build new classifiaction page
-router.get("/add-classification", utilities.handleErrors(invController.buildAddClassifaction))
+router.get("/add-classification", utilities.checkAccountType, utilities.handleErrors(invController.buildAddClassifaction))
 
 // add new classification
 router.post("/add-classification", 
@@ -25,7 +25,7 @@ router.post("/add-classification",
 )
 
 // route build add inventory
-router.get("/add-inventory", utilities.handleErrors(invController.buildAddInventory))
+router.get("/add-inventory", utilities.checkAccountType, utilities.handleErrors(invController.buildAddInventory))
 
 // add new inventory
 router.post("/add-inventory",
@@ -37,13 +37,13 @@ router.post("/add-inventory",
 router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 
 //edit inventory view
-router.get("/edit/:inv_id", utilities.handleErrors(invController.buildEditInventory))
+router.get("/edit/:inv_id", utilities.checkAccountType, utilities.handleErrors(invController.buildEditInventory))
 
 //edit inventory
 router.post("/update/", utilities.handleErrors(invController.updateInventory))
 
 //delete inventory view
-router.get("/delete/:inv_id", utilities.handleErrors(invController.buildDelete))
+router.get("/delete/:inv_id", utilities.checkAccountType, utilities.handleErrors(invController.buildDelete))
 
 //delete for reals
 router.post("/delete/", utilities.handleErrors(invController.deleteItem))
