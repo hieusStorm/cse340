@@ -60,6 +60,8 @@ Util.buildClassificationGrid = async function(data){
 Util.buildInventoryFlex = async function(data) {
   let flex ="";
   if (data.length > 0){
+    averageRating = data[0].inv_rating/data[0].inv_total_rating
+
     flex += `<h2>${data[0].inv_year} ${data[0].inv_make} ${data[0].inv_model}</h2>`
     flex += `<div class='inv-flex'>`
     flex += `<img src='${data[0].inv_image}' alt='image of a ${data[0].inv_make} ${data[0].inv_model}'>`
@@ -72,6 +74,7 @@ Util.buildInventoryFlex = async function(data) {
     flex += `<p><strong>Price</strong> ${ new Intl.NumberFormat('en-US').format(data[0].inv_price)}</p>`
     flex += `<p><strong>Color</strong> ${data[0].inv_color}</p>`
     flex += `<p><strong>Mileage</strong> ${ new Intl.NumberFormat('en-US').format(data[0].inv_miles)}</p>`
+    flex += `<p><strong>Average Rating</strong> ${averageRating}`
     flex += `<p><strong>Decription</strong> ${data[0].inv_description}</p>`
     flex += `</div>`
     flex += `</div>`

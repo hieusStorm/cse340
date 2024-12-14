@@ -1,1 +1,24 @@
+<%- messages() %>
+<% if (errors) { %>
+    <ul class="notice">
+   <% errors.array().forEach(error => { %>
+     <li><%= error.msg %></li>
+  <%  }) %>
+   </ul>
+  <% } %>
 <%- flex %>
+<form method="post" action="/inv/detail/<%- inventory_id %>">
+    <label for="inv_rating">Rating: </label>
+    <select id="inv_rating" name="inv_rating" required>
+        <option value="" disabled selected>Select Rating</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <input type="hidden" name="inv_id" value="<%- inventory_id %>">
+    <input type="hidden" name="inv_total_rating" value="<%- inv_total_rating %>">
+    <input type="hidden" name="old_inv_rating" value="<%- inv_rating %>">
+    <input type="submit" class="button" value="Add Rating">
+</form>

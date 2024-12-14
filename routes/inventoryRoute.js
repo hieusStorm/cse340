@@ -11,6 +11,13 @@ router.get("/type/:classificationId", utilities.handleErrors(invController.build
 //Route to build car info by inventory view
 router.get("/detail/:inventoryId", utilities.handleErrors(invController.buildByInventoryId))
 
+//add rating 
+router.post("/detail/:inventoryId", 
+    invValidation.rating(),
+    invValidation.checkRating,
+    utilities.handleErrors(invController.addRating)
+)
+
 //Route to build management page
 router.get("/", utilities.checkAccountType, utilities.handleErrors(invController.buildManagement))
 

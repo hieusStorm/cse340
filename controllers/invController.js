@@ -29,11 +29,17 @@ invCont.buildByInventoryId = async function (req, res, next) {
   const flex = await utilities.buildInventoryFlex(data)
   let nav = await utilities.getNav()
   const carName = `${data[0].inv_make} ${data[0].inv_model}`
+  const inv_total_rating = data[0].inv_total_rating + 1
+  const inv_rating = data[0].inv_total_rating
+
   res.render("./inventory/detail", {
     title: carName,
     nav,
     flex,
     errors: null,
+    inventory_id,
+    inv_total_rating,
+    inv_rating
   })
 }
 
@@ -269,6 +275,24 @@ invCont.deleteItem = async (req, res, next) => {
     inv_price,
     })
   }
+}
+
+//add rating
+invCont.addRating = async (req, res, next) => {
+  const {
+    inv_id,
+    inv_rating,
+    inv_total_rating,
+    old_inv_rating
+  } = req.body
+  let total_inv_rating = inv_rating + old_inv_rating
+  const updateRating = await invModel.addRating(inv_id, total_inv_rating, inv_total_rating)
+  if(updateRating) {
+    req.flash("notice", "You're Rating has been added")
+  } else {
+    req.flash("notice", "Failed to add Rating")
+  }
+   res.redirect(`/inv/detail/${inv_id}`)
 }
 
 module.exports = invCont

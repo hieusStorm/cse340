@@ -119,4 +119,15 @@ async function deleteInventory(inv_id) {
   }
 }
 
-module.exports = {getClassifications, getInventory, getInventoryByClassificationId, getInventoryByInventoryId, checkClassification, addClassification, addInventory, updateInventory, deleteInventory}
+// update ratting
+async function addRating(inv_id, inv_rating, inv_total_rating) {
+  try {
+    const sql = "UPDATE public.inventory SET inv_rating = $1, inv_total_rating = $2 WHERE inv_id = $3 RETURNING *"
+    const data = await pool.query(sql, [inv_rating, inv_total_rating, inv_id])
+    return data
+  } catch (error) {
+    console.error("Add rating error: " + error)
+  }
+}
+
+module.exports = { getClassifications, getInventory, getInventoryByClassificationId, getInventoryByInventoryId, checkClassification, addClassification, addInventory, updateInventory, deleteInventory, addRating }

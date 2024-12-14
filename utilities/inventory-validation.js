@@ -154,4 +154,41 @@ validate.checkUpdateData = async (req, res, next) => {
     next()
 }
 
+//check rating data and rules
+validate.rating = () => {
+    return [
+        body("inv_rating")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isNumeric()
+        .isLength({ min: 1 })
+        .withMessage("Please provide a rating")
+    ]
+}
+validate.checkRating = async (req, res, next) => {
+    const { inv_rating } = req.body
+    let errors = []
+    errors = validationResult(req)
+    if(!errors.isEmpty()) {
+        const inventory_id = req.params.inventoryId
+        const data = await invModel.getInventoryByInventoryId(inventory_id)
+        const flex = await utilities.buildInventoryFlex(data)
+        let nav = await utilities.getNav()
+        const carName = `${data[0].inv_make} ${data[0].inv_model}`
+        const inv_total_rating = data[0].inv_total_rating + 1
+        const inv_rating = data[0].inv_total_rating
+        res.render("/inventory/detail", {
+            title: carName,
+            nav,
+             flex,
+             errors,
+             inventory_id,
+             inv_total_rating,
+             inv_rating
+            })
+        return
+    }
+    next()
+}
 module.exports = validate

@@ -246,3 +246,9 @@ WHERE inv_id = 10;
 UPDATE public.inventory
 SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
     inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
+
+    ALTER TABLE IF EXISTS public.inventory
+    ADD COLUMN inv_rating integer;
+    
+    ALTER TABLE IF EXISTS public.inventory
+    ADD COLUMN inv_total_rating integer;
